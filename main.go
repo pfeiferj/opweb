@@ -12,6 +12,8 @@ import (
 var basePartial string
 
 func main() {
+	EnsureParamDirectories()
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)

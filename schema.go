@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -8,21 +9,51 @@ import (
 	"github.com/devsisters/go-dyncapnp"
 )
 
-func getSchemas() map[string]*dyncapnp.ParsedSchema {
+func getCerealPath() (string, error) {
 	ex, err := os.Executable()
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 	exPath := filepath.Dir(ex)
 	if strings.HasPrefix(exPath, "/tmp") {
 		exPath, _ = os.Getwd()
 	}
+	path := filepath.Join(exPath, "cereal")
+	exists, _ := Exists(path)
+	if exists {
+		return path, nil
+	}
 
-	logSchemaPath := filepath.Join(exPath, "../../cereal/log.capnp")
-	carSchemaPath := filepath.Join(exPath, "../../cereal/car.capnp")
-	legacySchemaPath := filepath.Join(exPath, "../../cereal/legacy.capnp")
-	customSchemaPath := filepath.Join(exPath, "../../cereal/custom.capnp")
-	cppSchemaPath := filepath.Join(exPath, "../../cereal/include/c++.capnp")
+	path = filepath.Join(exPath, "../cereal")
+	exists, _ = Exists(path)
+	if exists {
+		return path, nil
+	}
+
+	path = filepath.Join(exPath, "../../cereal")
+	exists, _ = Exists(path)
+	if exists {
+		return path, nil
+	}
+
+	path = filepath.Join(exPath, "../openpilot/cereal")
+	exists, _ = Exists(path)
+	if exists {
+		return path, nil
+	}
+
+	return "", errors.New("Could not find cereal")
+}
+
+func getSchemas() map[string]*dyncapnp.ParsedSchema {
+	cereal_path, err := getCerealPath()
+	check(err)
+
+	logSchemaPath := filepath.Join(cereal_path, "log.capnp")
+	carSchemaPath := filepath.Join(cereal_path, "car.capnp")
+	legacySchemaPath := filepath.Join(cereal_path, "legacy.capnp")
+	customSchemaPath := filepath.Join(cereal_path, "custom.capnp")
+	cppSchemaPath := filepath.Join(cereal_path, "include/c++.capnp")
 
 	logDat, err := os.ReadFile(logSchemaPath)
 	check(err)
