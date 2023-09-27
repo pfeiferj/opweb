@@ -1,0 +1,53 @@
+<header style="width: inherit;">
+  <h1 class="text-lg font-bold tracking-tight text-center text-gray-900 dark:text-gray-400 sm:text-xl mb-4">
+    {{Route}}
+  </h1>
+  <video id="my_video_1" class="video-js rounded-lg mx-auto mb-4" width="526" height="330" style="width:526px;height:330px;" controls>
+    <source src="/playlist/{{Route}}.m3u8" type="application/x-mpegURL">
+  </video>
+  <div id="map" class="w-full" style="height:400px"></div>
+</header>
+<script>
+elt = document.getElementById("my_video_1")
+var hls = new Hls();
+hls.loadSource(elt.children[0].src);
+hls.attachMedia(elt);
+</script>
+<script>
+  function display_gpx(elt) {
+    if (!elt) return;
+
+    var url = "/gpx/qlog/{{Route}}.gpx";
+
+    function _t(t) { return elt.getElementsByTagName(t)[0]; }
+    function _c(c) { return elt.getElementsByClassName(c)[0]; }
+
+    var map = L.map('map');
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="http://www.osm.org">OpenStreetMap</a>'
+    }).addTo(map);
+
+    var control = L.control.layers(null, null).addTo(map);
+
+    new L.GPX(url, {
+      async: true,
+      marker_options: {
+        startIconUrl: '/static/pin-icon-start.png',
+        endIconUrl:   '/static/pin-icon-end.png',
+        shadowUrl:    '/static/pin-shadow.png',
+      },
+    }).on('loaded', function(e) {
+      var gpx = e.target;
+      map.fitBounds(gpx.getBounds());
+      control.addOverlay(gpx, gpx.get_name());
+
+      _t('h3').textContent = gpx.get_name();
+      _c('start').textContent = gpx.get_start_time().toDateString() + ', '
+        + gpx.get_start_time().toLocaleTimeString();
+      _c('distance').textContent = gpx.get_distance_imp().toFixed(2);
+      _c('duration').textContent = gpx.get_duration_string(gpx.get_moving_time());
+    }).addTo(map);
+  }
+
+  display_gpx(document.getElementById('map'));
+</script>
