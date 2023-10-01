@@ -32,9 +32,9 @@
   </head>
   <body class="bg-white dark:bg-slate-800 text-2xl lg:text-sm">
     <header class="bg-gray-200 dark:bg-slate-900 text-slate-900 dark:text-white">
-      <nav hx-boost="true" class="mx-auto max-w-7xl items-center justify-between p-6 px-8" aria-label="Global">
+      <nav x-data="{ open: false }" hx-boost="true" class="mx-auto max-w-7xl items-center justify-between p-6 px-8" aria-label="Global">
         <div class="flex w-100 items-center gap-x-12">
-          <button hx-on="click: toggleMenu()" type="button" class="lg:hidden relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+          <button type="button" x-on:click="open = ! open" class="lg:hidden relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
             <span class="absolute -inset-0.5"></span>
             <span class="sr-only">Open main menu</span>
             <svg id="closed-button" class="block h-16 w-16" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
@@ -48,16 +48,17 @@
             {{>wheel.html}}
             <span class="sr-only">Openpilot</span>
           </a>
-          <div class="hidden lg:flex gap-x-12">
+          <div class="lg:flex gap-x-12">
             {{>routes_dropdown.html}}
+          </div>
+          <div class="hidden lg:flex gap-x-12">
             {{#Links}}
             <a href="{{ Path }}" class="font-semibold leading-6 text-slate-900 dark:text-gray-400">{{ Label }}</a>
             {{/Links}}
           </div>
         </div>
-        <div class="hidden w-100 lg:hidden" id="mobile-menu">
+        <div x-show="open" class="w-100 lg:hidden" id="mobile-menu">
           <div class="space-y-1 px-2 pb-3 pt-2">
-            {{>routes_dropdown.html}}
             {{#Links}}
             <a href="{{ Path }}" class="text-slate-900 dark:text-gray-400 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-6xl font-medium">{{ Label }}</a>
             {{/Links}}

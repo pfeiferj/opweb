@@ -15,6 +15,10 @@ type Links struct {
 	Label string
 }
 
+var PageLinks = []Links{
+	{Path: "/updater", Label: "Updater"},
+}
+
 type RoutesData struct {
 	Title string
 	Body  string
@@ -44,7 +48,7 @@ func routeRoute(r *chi.Mux) {
 		route := routes[len(routes)-1].Route
 		ctx := RoutesData{
 			Title: "Route",
-			Links: []Links{},
+			Links: PageLinks,
 			Route: route,
 			Data:  generateRouteData(route),
 		}
@@ -58,7 +62,7 @@ func routeRoute(r *chi.Mux) {
 		route := chi.URLParam(r, "route")
 		ctx := RoutesData{
 			Title: "Route",
-			Links: []Links{},
+			Links: PageLinks,
 			Route: route,
 			Data:  generateRouteData(route),
 		}

@@ -1,0 +1,44 @@
+<div hx-target="body" hx-get="/updater" hx-trigger="every 3s">
+  <div class="w-full divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-50 dark:bg-slate-700 text-slate-600 dark:text-gray-300 shadow mb-4">
+    <div class="px-4 py-5 sm:px-6">
+      Updater
+    </div>
+    <div class="px-4 py-5 sm:p-6">
+      <div class="mb-4 h-12">
+        {{#IdleButton}}
+        <button id="idle-button" class="rounded shadow-sm ring-1 ring-inset ring-gray-300 p-2" hx-post="{{ButtonLink}}" hx-swap="delete" hx-target="#idle-button">{{ButtonText}}</button>
+        {{/IdleButton}}
+
+        {{#InstallButton}}
+        <button id="install-button" class="rounded shadow-sm ring-1 ring-inset ring-gray-300 p-2" hx-post="/update/install" hx-swap="delete" hx-target="#install-button">Install Update</button>
+        {{/InstallButton}}
+      </div>
+
+      <table>
+        <tr><td class="font-bold pe-8">Version:</td><td>{{UpdateVersion}}</td></tr>
+        <tr><td class="font-bold pe-8">Branch:</td><td>{{UpdateBranch}}</td></tr>
+        <tr><td class="font-bold pe-8">Updater State:</td><td>{{UpdateState}}</td></tr>
+        <tr><td class="font-bold pe-8">Last Check:</td><td>{{UpdateLastCheck}}</td></tr>
+        <tr><td class="font-bold pe-8">Failure Count:</td><td>{{UpdateFailureCount}}</td></tr>
+      </table>
+      <div class="font-bold">Release Notes:</div>
+      <div>{{{UpdateReleaseNotes}}}</div>
+    </div>
+  </div>
+  <div class="w-full divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-50 dark:bg-slate-700 text-slate-600 dark:text-gray-300 shadow">
+    <div class="px-4 py-5 sm:px-6">
+      Current Version
+    </div>
+    <div class="px-4 py-5 sm:p-6">
+      <table>
+        <tr><td class="font-bold pe-8">Version:</td><td>{{CurrentVersion}}</td></tr>
+        <tr><td class="font-bold pe-8">Install Date:</td><td>{{CurrentInstallDate}}</td></tr>
+        <tr><td class="font-bold pe-8">Repo:</td><td>{{CurrentRepo}}</td></tr>
+        <tr><td class="font-bold pe-8">Branch:</td><td>{{CurrentBranch}}</td></tr>
+        <tr><td class="font-bold pe-8">Commit:</td><td>{{CurrentCommit}}</td></tr>
+      </table>
+      <div class="font-bold">Release Notes:</div>
+      <div>{{{CurrentReleaseNotes}}}</div>
+    </div>
+  </div>
+</div>
