@@ -37,24 +37,29 @@ func routeGpx(r *chi.Mux) {
 	r.Get("/gpx/rlog/{route}.gpx", func(w http.ResponseWriter, r *http.Request) {
 		route := chi.URLParam(r, "route")
 		gpx := generateGpx(route, "rlog", false)
+
+		w.Header().Set("Content-Disposition", "attachment; filename=\""+route+"-route-rlog.gpx\"")
 		_, err := w.Write([]byte(gpx.Render()))
 		check(err)
 	})
 	r.Get("/gpx/qlog/{route}.gpx", func(w http.ResponseWriter, r *http.Request) {
 		route := chi.URLParam(r, "route")
 		gpx := generateGpx(route, "qlog", false)
+		w.Header().Set("Content-Disposition", "attachment; filename=\""+route+"-route-qlog.gpx\"")
 		_, err := w.Write([]byte(gpx.Render()))
 		check(err)
 	})
 	r.Get("/gpx/rlog/segment/{route}.gpx", func(w http.ResponseWriter, r *http.Request) {
 		route := chi.URLParam(r, "route")
 		gpx := generateGpx(route, "rlog", true)
+		w.Header().Set("Content-Disposition", "attachment; filename=\""+route+"-segment-qlog.gpx\"")
 		_, err := w.Write([]byte(gpx.Render()))
 		check(err)
 	})
 	r.Get("/gpx/qlog/segment/{route}.gpx", func(w http.ResponseWriter, r *http.Request) {
 		route := chi.URLParam(r, "route")
 		gpx := generateGpx(route, "qlog", true)
+		w.Header().Set("Content-Disposition", "attachment; filename=\""+route+"-segment-qlog.gpx\"")
 		_, err := w.Write([]byte(gpx.Render()))
 		check(err)
 	})

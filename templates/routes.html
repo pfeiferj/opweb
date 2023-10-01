@@ -6,6 +6,35 @@
     <source src="/playlist/{{Route}}.m3u8" type="application/x-mpegURL">
   </video>
   <div id="map" class="w-full" style="height:400px"></div>
+  <div class="flow-root w-full mt-4 mb-4">
+    <div class="overflow-x-auto">
+      <div class="inline-block min-w-full align-middle">
+        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg w-full">
+          <table class="min-w-full divide-y divide-black">
+            <thead class="bg-gray-200 dark:bg-slate-900">
+              <tr>
+                <th scope="col" class="px-3 py-3.5 text-left font-semibold text-slate-600 dark:text-gray-400">Distance</th>
+                <th scope="col" class="px-3 py-3.5 text-left font-semibold text-slate-600 dark:text-gray-400">Average Speed</th>
+                <th scope="col" class="px-3 py-3.5 text-left font-semibold text-slate-600 dark:text-gray-400">Max Speed</th>
+                <th scope="col" class="px-3 py-3.5 text-left font-semibold text-slate-600 dark:text-gray-400">Min Elevation</th>
+                <th scope="col" class="px-3 py-3.5 text-left font-semibold text-slate-600 dark:text-gray-400">Max Elevation</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-900 bg-gray-50 dark:bg-slate-700">
+              <tr>
+                <td id="distance" class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"></td>
+                <td id="avg_speed" class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"></td>
+                <td id="max_speed" class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"></td>
+                <td id="min_elevation" class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"></td>
+                <td id="max_elevation" class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{>segments_table.html}}
 </header>
 <script>
 elt = document.getElementById("my_video_1")
@@ -39,13 +68,11 @@ hls.attachMedia(elt);
     }).on('loaded', function(e) {
       var gpx = e.target;
       map.fitBounds(gpx.getBounds());
-      control.addOverlay(gpx, gpx.get_name());
-
-      _t('h3').textContent = gpx.get_name();
-      _c('start').textContent = gpx.get_start_time().toDateString() + ', '
-        + gpx.get_start_time().toLocaleTimeString();
-      _c('distance').textContent = gpx.get_distance_imp().toFixed(2);
-      _c('duration').textContent = gpx.get_duration_string(gpx.get_moving_time());
+      document.getElementById("distance").innerText = gpx.get_distance_imp().toFixed(2) + " miles"
+      document.getElementById("avg_speed").innerText = gpx.get_moving_speed_imp().toFixed(1) + " mph"
+      document.getElementById("max_speed").innerText = gpx.get_speed_max_imp().toFixed(1) + " mph"
+      document.getElementById("min_elevation").innerText = gpx.get_elevation_min_imp().toFixed(0) + "'"
+      document.getElementById("max_elevation").innerText = gpx.get_elevation_max_imp().toFixed(0) + "'"
     }).addTo(map);
   }
 

@@ -2,10 +2,8 @@ package main
 
 import (
 	"os"
-	"os/signal"
 	"path/filepath"
 	"sort"
-	"syscall"
 
 	"github.com/gofrs/flock"
 )

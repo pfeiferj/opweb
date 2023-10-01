@@ -23,6 +23,7 @@ func main() {
 	routeFiles(r)
 	routeGpx(r)
 	routeLogs(r)
+	routeData(r)
 
 	err := http.ListenAndServe(":3000", r)
 	check(err)

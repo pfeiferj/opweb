@@ -6,6 +6,7 @@
       <trkpt lat="{{Latitude}}" lon="{{Longitude}}">
         <time>{{Timestamp}}</time>
         <magvar>{{Bearing}}</magvar>
+        <ele>{{Elevation}}</ele>
       </trkpt>
       {{/Points}}
     </trkseg>

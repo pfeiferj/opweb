@@ -1,0 +1,25 @@
+<div class="flow-root w-full mt-4 mb-4">
+  <div class="overflow-x-auto">
+    <div class="inline-block min-w-full align-middle">
+      <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg w-full">
+        <table class="min-w-full divide-y divide-black">
+          <thead class="bg-gray-200 dark:bg-slate-900">
+            <tr>
+              <th scope="col" class="px-3 py-3.5 text-left font-semibold text-slate-600 dark:text-gray-400">Name</th>
+              <th scope="col" class="px-3 py-3.5 text-left font-semibold text-slate-600 dark:text-gray-400">End Time</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-900 bg-gray-50 dark:bg-slate-700">
+            {{#Data.Segments}}
+            <tr hx-target="#data-{{Name}}" hx-get="/data/{{Name}}" hx-swap="outerHTML" class="cursor-pointer">
+              <td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300">{{Name}}</td>
+              <td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300">{{FormattedTime}}</td>
+            </tr>
+            <tr class="d-none" id="data-{{Name}}"></tr>
+            {{/Data.Segments}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

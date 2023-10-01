@@ -20,6 +20,7 @@ type RoutesData struct {
 	Body  string
 	Links []Links
 	Route string
+	Data  RouteData
 }
 
 //go:embed templates/routes.html
@@ -40,10 +41,12 @@ var routeLinksTemplate string
 func routeRoute(r *chi.Mux) {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		routes := Routes()
+		route := routes[len(routes)-1].Route
 		ctx := RoutesData{
 			Title: "Route",
 			Links: []Links{},
-			Route: routes[len(routes)-1].Route,
+			Route: route,
+			Data:  generateRouteData(route),
 		}
 		result, err := mustache.RenderInLayoutPartials(routesTemplate, basePartial, PartialProvider, ctx)
 		check(err)
@@ -57,6 +60,7 @@ func routeRoute(r *chi.Mux) {
 			Title: "Route",
 			Links: []Links{},
 			Route: route,
+			Data:  generateRouteData(route),
 		}
 		result, err := mustache.RenderInLayoutPartials(routesTemplate, basePartial, PartialProvider, ctx)
 		check(err)
