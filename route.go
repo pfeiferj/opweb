@@ -2,12 +2,13 @@ package main
 
 import (
 	_ "embed"
-	"github.com/cbroglie/mustache"
-	"github.com/go-chi/chi/v5"
 	"net/http"
 	"os"
-	"sort"
+	"slices"
 	"strings"
+
+	"github.com/cbroglie/mustache"
+	"github.com/go-chi/chi/v5"
 )
 
 type Links struct {
@@ -45,7 +46,7 @@ var routeLinksTemplate string
 func routeRoute(r *chi.Mux) {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		routes := Routes()
-		route := routes[len(routes)-1].Route
+		route := routes[0].Route
 		ctx := RoutesData{
 			Title: "Route",
 			Links: PageLinks,
@@ -105,7 +106,8 @@ func Routes() []RouteLink {
 		i++
 	}
 
-	sort.Strings(route_dirs_sorted)
+	slices.Sort(route_dirs_sorted)
+	slices.Reverse(route_dirs_sorted)
 
 	route_dirs_list := make([]RouteLink, len(route_dirs))
 
