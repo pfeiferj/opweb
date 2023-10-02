@@ -9,6 +9,7 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"pfeifer.dev/opwebd/proto"
 	"time"
 )
 
@@ -88,11 +89,11 @@ func generateGpx(route string, typ string, isSegment bool) Gpx {
 			check(err)
 			offset += size
 
-			evt, err := ReadRootEvent(msg)
+			evt, err := proto.ReadRootEvent(msg)
 			if err != nil {
 				continue
 			}
-			if evt.Which() != Event_Which_liveLocationKalman {
+			if evt.Which() != proto.Event_Which_liveLocationKalman {
 				continue
 			}
 
@@ -101,7 +102,7 @@ func generateGpx(route string, typ string, isSegment bool) Gpx {
 				continue
 			}
 
-			if llk.Status() != LiveLocationKalman_Status_valid {
+			if llk.Status() != proto.LiveLocationKalman_Status_valid {
 				continue
 			}
 

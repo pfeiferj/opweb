@@ -4,6 +4,7 @@ import (
 	"capnproto.org/go/capnp/v3"
 	"log"
 	"os"
+	"pfeifer.dev/opwebd/proto"
 	"sort"
 	"strconv"
 	"strings"
@@ -77,7 +78,7 @@ func Segments(route string) []string {
 	return segment_dirs
 }
 
-func MonoDatetime(event Event, offset uint64, timezone string) time.Time {
+func MonoDatetime(event proto.Event, offset uint64, timezone string) time.Time {
 	mono_time := event.LogMonoTime()
 	wall_time := mono_time + offset
 	t := time.UnixMicro(int64(wall_time / 1000))
@@ -97,11 +98,11 @@ func MonoOffset(dat []byte) uint64 {
 		check(err)
 		offset += size
 
-		evt, err := ReadRootEvent(msg)
+		evt, err := proto.ReadRootEvent(msg)
 		if err != nil {
 			continue
 		}
-		if evt.Which() != Event_Which_clocks {
+		if evt.Which() != proto.Event_Which_clocks {
 			continue
 		}
 
