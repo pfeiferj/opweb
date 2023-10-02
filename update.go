@@ -54,56 +54,56 @@ func generateUpdate() Update {
 	buttonText := "Check For Update"
 	buttonLink := "/updater/check"
 	updaterFetchAvailable, err := GetParam(ParamPath("UpdaterFetchAvailable", false))
-	check(err)
-	if updaterFetchAvailable[0] == '1' {
+	ignore(err)
+	if len(updaterFetchAvailable) > 0 && updaterFetchAvailable[0] == '1' {
 		buttonText = "Download Update"
 		buttonLink = "/updater/download"
 	}
 
 	downloaded, err := GetParam(ParamPath("UpdateAvailable", false))
-	check(err)
+	ignore(err)
 
 	state, err := GetParam(ParamPath("UpdaterState", false))
-	check(err)
+	ignore(err)
 
 	version, err := GetParam(ParamPath("UpdaterNewDescription", false))
-	check(err)
+	ignore(err)
 
 	updateBranch, err := GetParam(ParamPath("UpdaterTargetBranch", false))
-	check(err)
+	ignore(err)
 
 	lastCheck, err := GetParam(ParamPath("LastUpdateTime", false))
-	check(err)
+	ignore(err)
 
 	updateNotes, err := GetParam(ParamPath("UpdaterNewReleaseNotes", false))
-	check(err)
+	ignore(err)
 
 	updateFailedCount, err := GetParam(ParamPath("UpdateFailedCount", false))
-	check(err)
+	ignore(err)
 
 	currentVersion, err := GetParam(ParamPath("UpdaterCurrentDescription", false))
-	check(err)
+	ignore(err)
 
 	currentRepo, err := GetParam(ParamPath("GitRemote", false))
-	check(err)
+	ignore(err)
 
 	currentBranch, err := GetParam(ParamPath("GitBranch", false))
-	check(err)
+	ignore(err)
 
 	currentInstallDate, err := GetParam(ParamPath("InstallDate", false))
-	check(err)
+	ignore(err)
 
 	currentReleaseNotes, err := GetParam(ParamPath("UpdaterCurrentReleaseNotes", false))
-	check(err)
+	ignore(err)
 
 	currentCommit, err := GetParam(ParamPath("GitCommit", false))
-	check(err)
+	ignore(err)
 
 	return Update{
 		ButtonText:          buttonText,
 		ButtonLink:          buttonLink,
 		IdleButton:          Equal(state, []byte("idle")),
-		InstallButton:       downloaded[0] == '1',
+		InstallButton:       len(downloaded) > 0 && downloaded[0] == '1',
 		UpdateState:         string(state),
 		UpdateVersion:       string(version),
 		UpdateBranch:        string(updateBranch),

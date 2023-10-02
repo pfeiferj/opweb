@@ -19,6 +19,12 @@ func check(e error) {
 	}
 }
 
+func ignore(e error) {
+	if e != nil {
+		log.Println(e)
+	}
+}
+
 // exists returns whether the given file or directory exists
 func Exists(path string) (bool, error) {
 	_, err := os.Stat(path)
