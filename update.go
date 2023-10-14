@@ -38,7 +38,7 @@ func routeUpdate(r *chi.Mux) {
 		exists, err := Exists("/data/openpilot/prebuilt")
 		check(err)
 		if exists {
-			err = os.Remove("GeeksforGeeks.txt")
+			err = os.Remove("/data/openpilot/prebuilt")
 			check(err)
 		}
 
