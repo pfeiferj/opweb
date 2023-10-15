@@ -36,12 +36,12 @@ func routeParams(r *chi.Mux) {
 }
 
 func generateParams() Params {
-	keys, err := GetParams(true)
+	keys, err := GetParams(false)
 	check(err)
 	params := make([]Param, len(keys))
 	for i, k := range keys {
 		params[i].Key = k
-		val, err := GetParam(ParamPath(k, true))
+		val, err := GetParam(ParamPath(k, false))
 		check(err)
 		if IsString(val) {
 			params[i].Value = string(val)
