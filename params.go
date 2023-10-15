@@ -32,6 +32,13 @@ func routeParams(r *chi.Mux) {
 		_, err := w.Write([]byte(params.Render()))
 		check(err)
 	})
+
+	r.Post("/params/{key}", func(w http.ResponseWriter, r *http.Request) {
+		key := chi.URLParam(r, "key")
+		value := r.FormValue("Value")
+		err := PutParam(ParamPath(key, false), []byte(value))
+		check(err)
+	})
 }
 
 func generateParams() Params {
