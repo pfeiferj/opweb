@@ -2,7 +2,6 @@ package main
 
 import (
 	_ "embed"
-	"encoding/hex"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -46,7 +45,7 @@ func generateParams() Params {
 		if IsString(val) {
 			params[i].Value = string(val)
 		} else {
-			params[i].Value = hex.EncodeToString(val)
+			params[i].Value = "**value contains binary**"
 		}
 	}
 	return Params{
