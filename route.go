@@ -17,6 +17,7 @@ type Links struct {
 }
 
 var PageLinks = []Links{
+	{Path: "/params", Label: "Params"},
 	{Path: "/updater", Label: "Updater"},
 }
 

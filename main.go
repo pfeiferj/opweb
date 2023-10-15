@@ -25,6 +25,7 @@ func main() {
 	routeLogs(r)
 	routeData(r)
 	routeUpdate(r)
+	routeParams(r)
 
 	err := http.ListenAndServe(":3000", r)
 	check(err)

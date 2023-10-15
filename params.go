@@ -1,15 +1,69 @@
 package main
 
 import (
+	_ "embed"
+	"encoding/hex"
+	"net/http"
 	"os"
 	"path/filepath"
 	"sort"
 
+	"github.com/cbroglie/mustache"
+	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/flock"
 )
 
 var ParamsPath string = "/data/params/d"
 var MemParamsPath string = "/dev/shm/params/d"
+
+type Params struct {
+	Title  string
+	Links  []Links
+	Params []Param
+}
+
+type Param struct {
+	Key   string
+	Value string
+}
+
+func routeParams(r *chi.Mux) {
+	r.Get("/params", func(w http.ResponseWriter, r *http.Request) {
+		params := generateParams()
+		_, err := w.Write([]byte(params.Render()))
+		check(err)
+	})
+}
+
+func generateParams() Params {
+	keys, err := GetParams(true)
+	check(err)
+	params := make([]Param, len(keys))
+	for i, k := range keys {
+		params[i].Key = k
+		val, err := GetParam(ParamPath(k, true))
+		check(err)
+		if IsString(val) {
+			params[i].Value = string(val)
+		} else {
+			params[i].Value = hex.EncodeToString(val)
+		}
+	}
+	return Params{
+		Title:  "Updater",
+		Links:  PageLinks,
+		Params: params,
+	}
+}
+
+//go:embed templates/params.html
+var paramsTemplate string
+
+func (p Params) Render() string {
+	page, err := mustache.RenderInLayoutPartials(paramsTemplate, basePartial, PartialProvider, p)
+	check(err)
+	return page
+}
 
 func EnsureParamDirectories() {
 	os.MkdirAll(ParamsPath, 0775)
@@ -18,7 +72,7 @@ func EnsureParamDirectories() {
 
 func IsString(data []byte) bool {
 	for _, b := range data {
-		if b < 32 || b > 126 {
+		if (b < 32 || b > 126) && !(b == 9 || b == 13 || b == 10) {
 			return false
 		}
 	}
