@@ -1,0 +1,13 @@
+package components
+
+templ Log(logEntries []string, logType string, segment string, logKeys []string) {
+	<select name="key" hx-get={ "/logs/view/" + logType + "/" + segment } hx-target="body" hx-preserve>
+		for _, key := range logKeys {
+			<option value={ key }>{ key }</option>
+		}
+	</select>
+	for _, entry := range logEntries {
+		<pre>{ entry }</pre>
+		<hr/>
+	}
+}

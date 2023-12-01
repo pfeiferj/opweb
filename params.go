@@ -1,35 +1,25 @@
 package main
 
 import (
-	_ "embed"
 	"net/http"
 	"os"
 	"path/filepath"
 	"sort"
 
-	"github.com/cbroglie/mustache"
 	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/flock"
+
+	"pfeifer.dev/opwebd/components"
 )
 
 var ParamsPath string = "/data/params/d"
 var MemParamsPath string = "/dev/shm/params/d"
 
-type Params struct {
-	Title  string
-	Links  []Links
-	Params []Param
-}
-
-type Param struct {
-	Key   string
-	Value string
-}
-
 func routeParams(r *chi.Mux) {
 	r.Get("/params", func(w http.ResponseWriter, r *http.Request) {
 		params := generateParams()
-		_, err := w.Write([]byte(params.Render()))
+		routes := Routes()
+		err := components.Layout("Params", routes, components.Params(params)).Render(r.Context(), w)
 		check(err)
 	})
 
@@ -41,10 +31,10 @@ func routeParams(r *chi.Mux) {
 	})
 }
 
-func generateParams() Params {
+func generateParams() []components.Param {
 	keys, err := GetParams(false)
 	check(err)
-	params := make([]Param, len(keys))
+	params := make([]components.Param, len(keys))
 	for i, k := range keys {
 		params[i].Key = k
 		val, err := GetParam(ParamPath(k, false))
@@ -55,20 +45,7 @@ func generateParams() Params {
 			params[i].Value = "**value contains binary**"
 		}
 	}
-	return Params{
-		Title:  "Updater",
-		Links:  PageLinks,
-		Params: params,
-	}
-}
-
-//go:embed templates/params.html
-var paramsTemplate string
-
-func (p Params) Render() string {
-	page, err := mustache.RenderInLayoutPartials(paramsTemplate, basePartial, PartialProvider, p)
-	check(err)
-	return page
+	return params
 }
 
 func EnsureParamDirectories() {

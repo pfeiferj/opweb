@@ -1,0 +1,72 @@
+package components
+
+type IdleButton struct {
+  Show bool
+  Link string
+  Text string
+}
+
+type UpdateData struct {
+  Version string
+  Branch string
+  State string
+  LastCheck string
+  FailureCount string
+  ReleaseNotes string
+}
+
+type CurrentData struct {
+  Version string
+  InstallDate string
+  Repo string
+  Branch string
+  Commit string
+  ReleaseNotes string
+}
+
+templ Update(updateData UpdateData, currentData CurrentData, idleButton IdleButton, showInstallButton bool) {
+<div hx-target="#content" hx-select="#content" hx-get="/updater" hx-swap="outerHTML" hx-trigger="every 3s">
+  <div class="w-full divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-50 dark:bg-slate-700 text-slate-600 dark:text-gray-300 shadow mb-4">
+    <div class="px-4 py-5 sm:px-6">
+      Updater
+    </div>
+    <div class="px-4 py-5 sm:p-6">
+      <div class="mb-4 h-12">
+        if idleButton.Show {
+        <button id="idle-button" class="rounded shadow-sm ring-1 ring-inset ring-gray-300 p-2" hx-post={ idleButton.Link } hx-swap="delete" hx-target="#idle-button">{ idleButton.Text }</button>
+        }
+
+        if showInstallButton {
+        <button id="install-button" class="rounded shadow-sm ring-1 ring-inset ring-gray-300 p-2" hx-post="/updater/install" hx-swap="delete" hx-target="#install-button">Install Update</button>
+        }
+      </div>
+
+      <table>
+        <tr><td class="font-bold pe-8">Version:</td><td>{ updateData.Version }</td></tr>
+        <tr><td class="font-bold pe-8">Branch:</td><td>{ updateData.Branch }</td></tr>
+        <tr><td class="font-bold pe-8">Updater State:</td><td>{ updateData.State }</td></tr>
+        <tr><td class="font-bold pe-8">Last Check:</td><td>{ updateData.LastCheck }</td></tr>
+        <tr><td class="font-bold pe-8">Failure Count:</td><td>{ updateData.FailureCount }</td></tr>
+      </table>
+      <div class="font-bold">Release Notes:</div>
+      <div>{ updateData.ReleaseNotes }</div>
+    </div>
+  </div>
+  <div class="w-full divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-50 dark:bg-slate-700 text-slate-600 dark:text-gray-300 shadow">
+    <div class="px-4 py-5 sm:px-6">
+      Current Version
+    </div>
+    <div class="px-4 py-5 sm:p-6">
+      <table>
+        <tr><td class="font-bold pe-8">Version:</td><td>{ currentData.Version }</td></tr>
+        <tr><td class="font-bold pe-8">Install Date:</td><td>{ currentData.InstallDate }</td></tr>
+        <tr><td class="font-bold pe-8">Repo:</td><td>{ currentData.Repo }</td></tr>
+        <tr><td class="font-bold pe-8">Branch:</td><td>{ currentData.Branch }</td></tr>
+        <tr><td class="font-bold pe-8">Commit:</td><td>{ currentData.Commit }</td></tr>
+      </table>
+      <div class="font-bold">Release Notes:</div>
+      <div>{ currentData.ReleaseNotes }</div>
+    </div>
+  </div>
+</div>
+}

@@ -1,3 +1,12 @@
+package components
+
+type Segment struct {
+  Name string
+  Time float64
+  FormattedTime string
+}
+
+templ segmentsTable(segments []Segment) {
 <div class="flow-root w-full mt-4 mb-4">
   <div class="overflow-x-auto">
     <div class="inline-block min-w-full align-middle">
@@ -10,16 +19,17 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-900 bg-gray-50 dark:bg-slate-700">
-            {{#Data.Segments}}
-            <tr hx-target="#data-{{Name}}" hx-get="/data/{{Name}}" hx-swap="outerHTML" class="cursor-pointer">
-              <td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300">{{Name}}</td>
-              <td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300">{{FormattedTime}}</td>
+            for _, segment := range segments {
+            <tr hx-target={"#data-" + segment.Name} hx-get={"/data/" + segment.Name} hx-swap="outerHTML" class="cursor-pointer">
+              <td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300">{segment.Name}</td>
+              <td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300">{segment.FormattedTime}</td>
             </tr>
-            <tr class="d-none" id="data-{{Name}}"></tr>
-            {{/Data.Segments}}
+            <tr class="d-none" id={"data-" + segment.Name}></tr>
+            }
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
+}

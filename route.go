@@ -1,91 +1,39 @@
 package main
 
 import (
-	_ "embed"
 	"net/http"
 	"os"
 	"slices"
 	"strings"
 
-	"github.com/cbroglie/mustache"
 	"github.com/go-chi/chi/v5"
+
+	"pfeifer.dev/opwebd/components"
 )
-
-type Links struct {
-	Path  string
-	Label string
-}
-
-var PageLinks = []Links{
-	{Path: "/params", Label: "Params"},
-	{Path: "/updater", Label: "Updater"},
-}
-
-type RoutesData struct {
-	Title string
-	Body  string
-	Links []Links
-	Route string
-	Data  RouteData
-}
-
-//go:embed templates/routes.html
-var routesTemplate string
-
-type RouteLinks struct {
-	Routes []RouteLink
-	Open   bool
-}
-
-type RouteLink struct {
-	Route string
-}
-
-//go:embed templates/routes_dropdown.html
-var routeLinksTemplate string
 
 func routeRoute(r *chi.Mux) {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		routes := Routes()
-		route := routes[0].Route
-		ctx := RoutesData{
-			Title: "Route",
-			Links: PageLinks,
-			Route: route,
-			Data:  generateRouteData(route),
-		}
-		result, err := mustache.RenderInLayoutPartials(routesTemplate, basePartial, PartialProvider, ctx)
-		check(err)
-		_, err = w.Write([]byte(result))
-		check(err)
+		route := routes[0]
+		segments := segmentData(route)
+		components.Layout("Route", routes, components.Route(route, segments)).Render(r.Context(), w)
 	})
 
 	r.Get("/{route}", func(w http.ResponseWriter, r *http.Request) {
 		route := chi.URLParam(r, "route")
-		ctx := RoutesData{
-			Title: "Route",
-			Links: PageLinks,
-			Route: route,
-			Data:  generateRouteData(route),
-		}
-		result, err := mustache.RenderInLayoutPartials(routesTemplate, basePartial, PartialProvider, ctx)
-		check(err)
-		_, err = w.Write([]byte(result))
-		check(err)
+		routes := Routes()
+		segments := segmentData(route)
+		components.Layout("Route", routes, components.Route(route, segments)).Render(r.Context(), w)
 	})
 
 	r.Get("/routes/{state}", func(w http.ResponseWriter, r *http.Request) {
 		state := chi.URLParam(r, "state")
 		routes := Routes()
-		ctx := RouteLinks{Routes: routes, Open: state == "open"}
-		result, err := mustache.RenderPartials(routeLinksTemplate, PartialProvider, ctx)
-		check(err)
-		_, err = w.Write([]byte(result))
-		check(err)
+		components.RoutesDropdown(routes, state == "open").Render(r.Context(), w)
 	})
 }
 
-func Routes() []RouteLink {
+func Routes() []string {
 	files, err := os.ReadDir(BasePath)
 	check(err)
 
@@ -110,11 +58,5 @@ func Routes() []RouteLink {
 	slices.Sort(route_dirs_sorted)
 	slices.Reverse(route_dirs_sorted)
 
-	route_dirs_list := make([]RouteLink, len(route_dirs))
-
-	for i, v := range route_dirs_sorted {
-		route_dirs_list[i].Route = v
-	}
-
-	return route_dirs_list
+	return route_dirs_sorted
 }

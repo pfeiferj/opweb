@@ -3,13 +3,9 @@ package main
 import (
 	"net/http"
 
-	_ "embed"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
-
-//go:embed partials/base.html
-var basePartial string
 
 func main() {
 	EnsureParamDirectories()

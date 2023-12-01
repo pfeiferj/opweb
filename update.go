@@ -1,18 +1,19 @@
 package main
 
 import (
-	_ "embed"
-	"github.com/cbroglie/mustache"
-	"github.com/go-chi/chi/v5"
 	"net/http"
 	"os"
 	"os/exec"
+
+	"github.com/go-chi/chi/v5"
+	"pfeifer.dev/opwebd/components"
 )
 
 func routeUpdate(r *chi.Mux) {
 	r.Get("/updater", func(w http.ResponseWriter, r *http.Request) {
 		update := generateUpdate()
-		_, err := w.Write([]byte(update.Render()))
+		routes := Routes()
+		err := components.Layout("Updater", routes, components.Update(update.Update, update.Current, update.IdleButton, update.InstallButton)).Render(r.Context(), w)
 		check(err)
 	})
 
@@ -100,53 +101,34 @@ func generateUpdate() Update {
 	ignore(err)
 
 	return Update{
-		ButtonText:          buttonText,
-		ButtonLink:          buttonLink,
-		IdleButton:          Equal(state, []byte("idle")),
-		InstallButton:       len(downloaded) > 0 && downloaded[0] == '1',
-		UpdateState:         string(state),
-		UpdateVersion:       string(version),
-		UpdateBranch:        string(updateBranch),
-		UpdateLastCheck:     string(lastCheck),
-		UpdateReleaseNotes:  string(updateNotes),
-		UpdateFailureCount:  string(updateFailedCount),
-		CurrentVersion:      string(currentVersion),
-		CurrentRepo:         string(currentRepo),
-		CurrentBranch:       string(currentBranch),
-		CurrentInstallDate:  string(currentInstallDate),
-		CurrentReleaseNotes: string(currentReleaseNotes),
-		CurrentCommit:       string(currentCommit),
-		Title:               "Updater",
-		Links:               PageLinks,
+		IdleButton: components.IdleButton{
+			Show: Equal(state, []byte("idle")),
+			Text: buttonText,
+			Link: buttonLink,
+		},
+		InstallButton: len(downloaded) > 0 && downloaded[0] == '1',
+		Update: components.UpdateData{
+			State:        string(state),
+			Version:      string(version),
+			Branch:       string(updateBranch),
+			LastCheck:    string(lastCheck),
+			ReleaseNotes: string(updateNotes),
+			FailureCount: string(updateFailedCount),
+		},
+		Current: components.CurrentData{
+			Version:      string(currentVersion),
+			Repo:         string(currentRepo),
+			Branch:       string(currentBranch),
+			InstallDate:  string(currentInstallDate),
+			ReleaseNotes: string(currentReleaseNotes),
+			Commit:       string(currentCommit),
+		},
 	}
 }
 
-//go:embed templates/update.html
-var updateTemplate string
-
 type Update struct {
-	IdleButton          bool
-	ButtonText          string
-	ButtonLink          string
-	InstallButton       bool
-	UpdateVersion       string
-	UpdateBranch        string
-	UpdateState         string
-	UpdateLastCheck     string
-	UpdateFailureCount  string
-	UpdateReleaseNotes  string
-	CurrentVersion      string
-	CurrentInstallDate  string
-	CurrentRepo         string
-	CurrentBranch       string
-	CurrentCommit       string
-	CurrentReleaseNotes string
-	Title               string
-	Links               []Links
-}
-
-func (u Update) Render() string {
-	page, err := mustache.RenderInLayoutPartials(updateTemplate, basePartial, PartialProvider, u)
-	check(err)
-	return page
+	IdleButton    components.IdleButton
+	InstallButton bool
+	Update        components.UpdateData
+	Current       components.CurrentData
 }

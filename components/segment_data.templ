@@ -1,0 +1,42 @@
+package components
+
+templ SegmentData(segment string) {
+	<tr id={ "data-" + segment } class="min-w-full">
+		<td colspan="2" class="min-w-full p-4">
+			<div class="overflow-hidden shadow ring-2 ring-black ring-opacity-5 sm:rounded-lg w-full">
+				<table class="min-w-full divide-y divide-gray">
+					<tbody class="divide-y divide-slate-900 bg-gray-100 dark:bg-slate-800">
+						<tr>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300">Raw Log Downloads</td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"><a href={ templ.URL("/download/" + segment + "/rlog") }>rlog</a></td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"><a href={ templ.URL("/download/" + segment + "/qlog") }>qlog</a></td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"></td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"></td>
+						</tr>
+						<tr>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300">JSON Log Downloads</td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"><a href={ templ.URL("/logs/rlog/" + segment + ".json") }>rlog.json</a></td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"><a href={ templ.URL("/logs/qlog/" + segment + ".json") }>qlog.json</a></td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"></td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"></td>
+						</tr>
+						<tr>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300">GPX Downloads</td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"><a href={ templ.URL("/gpx/rlog/segment/" + segment + ".gpx") }>rlog.gpx</a></td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"><a href={ templ.URL("/gpx/qlog/segment/" + segment + ".gpx") }>qlog.gpx</a></td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"></td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"></td>
+						</tr>
+						<tr>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300">Video Downloads</td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"><a href={ templ.URL("/download/" + segment + "/qcamera.ts") }>qcamera.ts</a></td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"><a href={ templ.URL("/download/" + segment + "/fcamera.hevc") }>fcamera.hevc</a></td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"><a href={ templ.URL("/download/" + segment + "/ecamera.hevc") }>ecamera.hevc</a></td>
+							<td class="break-all px-3 py-4 text-slate-600 dark:text-gray-300"><a href={ templ.URL("/download/" + segment + "/dcamera.hevc") }>dcamera.hevc</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</td>
+	</tr>
+}
