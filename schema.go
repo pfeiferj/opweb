@@ -18,8 +18,15 @@ func getCerealPath() (string, error) {
 	if strings.HasPrefix(exPath, "/tmp") {
 		exPath, _ = os.Getwd()
 	}
-	path := filepath.Join(exPath, "cereal")
+
+	path := "/data/openpilot/cereal"
 	exists, _ := Exists(path)
+	if exists {
+		return path, nil
+	}
+
+	path = filepath.Join(exPath, "cereal")
+	exists, _ = Exists(path)
 	if exists {
 		return path, nil
 	}
