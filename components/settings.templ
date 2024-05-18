@@ -53,6 +53,7 @@ templ Settings(settings []SettingGroup) {
 														<input
 															type="checkbox"
 															name={ setting.Key }
+                              value="1"
 															class="sr-only peer"
 															if setting.Param.Value == "1" {
 																checked
