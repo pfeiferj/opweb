@@ -8,6 +8,7 @@ type Link struct {
 var links = []Link{
 	{Path: "/params", Label: "Params"},
 	{Path: "/updater", Label: "Updater"},
+	{Path: "/settings", Label: "Settings"},
 }
 
 templ head(title string) {
@@ -17,15 +18,11 @@ templ head(title string) {
 		<script src="/static/htmx.min.js"></script>
 		<script src="/static/tailwind.min.js"></script>
 		<script src="/static/hls.min.js"></script>
-		// using CDNs for the following links/scripts as this functionality requires internet access anyways
-		<link
- 			rel="stylesheet"
- 			href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
- 			integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
- 			crossorigin=""
-		/>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
+		<script src="/static/flowbite.min.js"></script>
+		<script src="/static/leaflet.js"></script>
+		<script src="/static/gpx.min.js"></script>
+		<link rel="stylesheet" href="/static/flowbite.min.css" />
+		<link rel="stylesheet" href="/static/leaflet.css" />
 		<style>
       .leaflet-layer,
       .leaflet-control-zoom-in,
