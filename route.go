@@ -14,7 +14,10 @@ import (
 func routeRoute(r *chi.Mux) {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		routes := Routes()
-		route := routes[0]
+    route := ""
+    if len(routes) > 0 {
+      route = routes[0]
+    }
 		segments := segmentData(route)
 		components.Layout("Route", routes, components.Route(route, segments)).Render(r.Context(), w)
 	})
