@@ -12,8 +12,19 @@ import (
 	"pfeifer.dev/opwebd/components"
 )
 
-var ParamsPath string = "/data/params/d"
+var ParamsPath string = GetBaseParamsPath()
 var MemParamsPath string = "/dev/shm/params/d"
+
+func GetBaseParamsPath() string {
+	exists, err := Exists("/data/params/d")
+	check(err)
+	if exists {
+		return "/data/params/d"
+	} else {
+		return "params/"
+	}
+}
+
 
 func routeParams(r *chi.Mux) {
 	r.Get("/params", func(w http.ResponseWriter, r *http.Request) {
